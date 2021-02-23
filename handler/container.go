@@ -8,12 +8,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetContainers(c *gin.Context) {
+func GetAllContainers(c *gin.Context) {
 	ctx := context.Background()
-	containers, err := rpc.GetContainers(ctx)
+	containers, err := rpc.GetAllContainers(ctx)
 	if err != nil {
 		utils.RetErr(c, err)
 		return
 	}
 	utils.RetData(c, gin.H{"code": 0, "containers": containers})
 }
+
