@@ -10,7 +10,7 @@ import (
 
 func GetImages(c *gin.Context) {
 	ctx := context.Background()
-	containers, err := rpc.GetImages(ctx)
+	containers, err := rpc.GetAllImages(ctx)
 	if err != nil {
 		utils.RetErr(c, err)
 		return

@@ -7,7 +7,7 @@ import (
 
 func TestGetImages(t *testing.T) {
 	ctx := context.Background()
-	_, err := GetImages(ctx)
+	_, err := GetAllImages(ctx)
 	if err != nil {
 		t.FailNow()
 	}
