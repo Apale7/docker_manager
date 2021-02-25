@@ -59,8 +59,8 @@ var RoleColumns = struct {
 // RoleResource [...]
 type RoleResource struct {
 	gorm.Model
-	RoleID     int `gorm:"index:idx_user_id;column:role_id;type:int(11);not null"` // role表的id
-	ResourceID int `gorm:"column:resource_id;type:int(11);not null"`               // resource表的id
+	RoleID     uint `gorm:"index:idx_user_id;column:role_id;type:int(11) unsigned;not null"` // role表的id
+	ResourceID uint `gorm:"column:resource_id;type:int(11) unsigned;not null"`               // resource表的id
 }
 
 // TableName get sql table name.获取数据库表名
@@ -117,8 +117,8 @@ var UserColumns = struct {
 // UserContainer [...]
 type UserContainer struct {
 	gorm.Model
-	UserID      int `gorm:"index:idx_user_id;column:user_id;type:int(11);not null"` // user表的id
-	ContainerID int `gorm:"column:container_id;type:int(11);not null"`              // docker中的container_id
+	UserID      uint   `gorm:"index:idx_user_id;column:user_id;type:int(11) unsigned;not null"` // user表的id
+	ContainerID string `gorm:"column:container_id;type:varchar(80);not null"`                   // docker中的container_id
 }
 
 // TableName get sql table name.获取数据库表名
@@ -146,11 +146,11 @@ var UserContainerColumns = struct {
 // UserExtra [...]
 type UserExtra struct {
 	gorm.Model
-	UserID      int    `gorm:"unique;column:user_id;type:int(11);not null"` // user表的id
-	Nickname    string `gorm:"column:nickname;type:varchar(16);not null"`   // 昵称
-	PhoneNumber string `gorm:"column:phone_number;type:varchar(16)"`        // 电话号码
-	Email       string `gorm:"column:email;type:varchar(32)"`               // 邮箱
-	AvatarURL   string `gorm:"column:avatar_url;type:varchar(255)"`         // 头像链接
+	UserID      uint   `gorm:"unique;column:user_id;type:int(11) unsigned;not null"` // user表的id
+	Nickname    string `gorm:"column:nickname;type:varchar(16);not null"`            // 昵称
+	PhoneNumber string `gorm:"column:phone_number;type:varchar(16)"`                 // 电话号码
+	Email       string `gorm:"column:email;type:varchar(32)"`                        // 邮箱
+	AvatarURL   string `gorm:"column:avatar_url;type:varchar(255)"`                  // 头像链接
 }
 
 // TableName get sql table name.获取数据库表名
@@ -184,8 +184,8 @@ var UserExtraColumns = struct {
 // UserImage [...]
 type UserImage struct {
 	gorm.Model
-	UserID  int `gorm:"index:idx_user_id;column:user_id;type:int(11);not null"` // user表的id
-	ImageID int `gorm:"column:image_id;type:int(11);not null"`                  // docker中的image_id
+	UserID  uint   `gorm:"index:idx_user_id;column:user_id;type:int(11) unsigned;not null"` // user表的id
+	ImageID string `gorm:"column:image_id;type:varchar(80);not null"`                       // docker中的image_id
 }
 
 // TableName get sql table name.获取数据库表名
@@ -213,8 +213,8 @@ var UserImageColumns = struct {
 // UserRole [...]
 type UserRole struct {
 	gorm.Model
-	UserID int `gorm:"index:idx_user_id;column:user_id;type:int(11);not null"` // user表的id
-	RoleID int `gorm:"column:role_id;type:int(11);not null"`                   // role表的id
+	UserID uint `gorm:"index:idx_user_id;column:user_id;type:int(11) unsigned;not null"` // user表的id
+	RoleID uint `gorm:"column:role_id;type:int(11) unsigned;not null"`                   // role表的id
 }
 
 // TableName get sql table name.获取数据库表名
