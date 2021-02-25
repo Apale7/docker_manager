@@ -2,6 +2,7 @@ package rpc
 
 import (
 	"context"
+	Manage "docker_manager/proto/container_server"
 	"fmt"
 	"testing"
 )
@@ -78,4 +79,25 @@ func TestPruneContainer(t *testing.T) {
 		t.FailNow()
 	}
 	TestGetContainers(t)
+}
+
+func TestStopContainers(t *testing.T) {
+	c, _ := GetAllContainers(ctx)
+
+	err := StopContainer(ctx, c[1].Id)
+	if err != nil {
+		t.Logf("StopContainer error: %+v", err)
+		t.FailNow()
+	}
+
+	tmp, _ := GetContainer(ctx, c[1].Id)
+	if tmp.Status != Manage.ContainerAttr_Paused {
+		t.Logf("StopContainer error")
+		t.FailNow()
+	}
+
+	err = StartContainer(ctx, c[1].Id)
+	if err != nil {
+		t.Logf("StartContainer error, err: %+v", err)
+	}
 }
