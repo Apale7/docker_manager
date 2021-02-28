@@ -1,0 +1,109 @@
+syntax = "proto3";
+package docker_manager;
+
+import "proto/base/base.proto";
+import "google/protobuf/empty.proto";
+service DockerManager {
+    rpc CreateContainer(CreateContainerRequest) returns (CreateContainerResponse) {}
+    rpc DeleteContainer(DeleteContainerRequest) returns (DeleteContainerResponse) {}
+    rpc GetContainer(GetContainerRequest) returns (GetContainerResponse) {}
+    rpc PruneContainers(google.protobuf.Empty) returns (google.protobuf.Empty) {}
+    rpc CreateImage(CreateImageRequest) returns (CreateImageResponse) {}
+    rpc DeleteImage(DeleteImageRequest) returns (DeleteImageResponse) {}
+    rpc GetImage(GetImageRequest) returns (GetImageResponse) {}
+    rpc PruneImages(google.protobuf.Empty) returns (google.protobuf.Empty) {}
+}
+
+message CreateContainerRequest {
+    uint32 user_id = 1;
+    string image_id = 2;
+
+    base.Base base = 255;
+}
+
+message CreateContainerResponse {
+    base.BaseResp base_resp = 255;
+}
+
+message Container {
+    enum ContainerStatus{
+        Running = 0;
+        Paused = 1;
+        Restarting = 2;
+        OOMKilled = 3;
+        Dead = 4;
+        UNKNOWN = 5; 
+   }
+    string id = 1;
+     int64 created = 2;
+     ContainerStatus status = 3;
+     string image = 4;
+     string name = 5;
+}
+
+message GetContainerRequest {
+    uint32 user_id = 1;
+    string container_id = 2;
+
+    base.Base base = 255;
+}
+
+message GetContainerResponse {
+    repeated Container containers = 1;
+
+    base.BaseResp base_resp = 255;
+}
+
+message DeleteContainerRequest {
+    uint32 user_id = 1;
+    string container_id = 2;
+
+    base.Base base = 255;
+}
+
+message DeleteContainerResponse {
+    base.BaseResp base_resp = 255;
+}
+
+message CreateImageRequest {
+    uint32 user_id = 1;
+    string image_id = 2;
+
+    base.Base base = 255;
+}
+
+message CreateImageResponse {
+    base.BaseResp base_resp = 255;
+}
+
+message Image{
+    string id = 1;
+    repeated string repoTags = 2;
+    int64 created = 3;
+    int64 size = 4; //以byte为单位
+    string author = 5;
+}
+
+message GetImageRequest {
+    uint32 user_id = 1;
+    string image_id = 2;
+
+    base.Base base = 255;
+}
+
+message GetImageResponse {
+    repeated Image images = 1;
+
+    base.BaseResp base_resp = 255;
+}
+
+message DeleteImageRequest {
+    uint32 user_id = 1;
+    string image_id = 2;
+
+    base.Base base = 255;
+}
+
+message DeleteImageResponse {
+    base.BaseResp base_resp = 255;
+}

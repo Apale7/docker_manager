@@ -62,6 +62,6 @@ func DeleteImage(ctx context.Context, imageID string, force bool) (err error) {
 	if err != nil {
 		return
 	}
-	
+
 	return
 }

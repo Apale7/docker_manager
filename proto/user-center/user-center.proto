@@ -1,0 +1,78 @@
+syntax = "proto3";
+package user_center;
+
+import "proto/base/base.proto";
+message User
+{
+    int32 id = 1;
+    string username = 2;
+    string password = 3;
+    int32 user_extra_id = 4;
+}
+
+message UserExtra
+{
+    int32 id = 1;
+    string nickname = 2;
+    string email = 3;
+    string phone_number = 4;
+}
+
+message RegisterRequest
+{
+    User user = 1;
+    UserExtra user_extra = 2;
+
+    base.Base base = 255;
+}
+
+message RegisterResponse
+{
+    int32 id = 1;
+
+    base.BaseResp base_resp = 255;
+}
+
+message LoginRequest
+{
+    string username = 1;
+    string password = 2;
+
+    base.Base base = 255;
+}
+
+message LoginResponse
+{
+    string token = 1;
+
+    base.BaseResp base_resp = 255;
+}
+
+//删除账户
+message DeleteRequest
+{
+    int32 id = 1;
+}
+
+message DeleteResponse
+{
+    base.BaseResp base_resp = 255;
+}
+
+message CheckTokenRequest {
+    string token = 1;
+
+    base.Base base = 255;
+}
+
+message CheckTokenResponse {
+    base.BaseResp base_resp = 255;
+}
+
+service UserCenter
+{
+    rpc Register(RegisterRequest) returns(RegisterResponse) {}
+    rpc Login(LoginRequest) returns (LoginResponse) {}
+    rpc Delete(DeleteRequest) returns (DeleteResponse) {}
+    rpc CheckToken(CheckTokenRequest) returns (CheckTokenResponse) {}
+}
