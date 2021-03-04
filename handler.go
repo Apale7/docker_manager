@@ -37,3 +37,10 @@ func (DockerManagerServer) GetImage(context.Context, *docker_manager.GetImageReq
 func (DockerManagerServer) PruneImages(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PruneImages not implemented")
 }
+
+func (DockerManagerServer) GetAllContainers(context.Context, *emptypb.Empty) (*docker_manager.GetAllContainersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllContainers not implemented")
+}
+func (DockerManagerServer) GetAllImages(context.Context, *emptypb.Empty) (*docker_manager.GetAllImagesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllImages not implemented")
+}
