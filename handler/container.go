@@ -3,19 +3,24 @@ package handler
 import (
 	"context"
 	"docker_manager/dal/rpc"
-
-	"github.com/Apale7/common/utils"
-	"github.com/gin-gonic/gin"
+	"docker_manager/dto"
+	"docker_manager/proto/docker_manager"
 )
 
-func GetAllContainers(c *gin.Context) {
-	ctx := context.Background()
-	containers, err := rpc.GetAllContainers(ctx)
+func GetAllContainers(ctx context.Context) (resp *docker_manager.GetAllContainersResponse, err error) {
+	containerAttrs, err := rpc.GetAllContainers(ctx)
 	if err != nil {
-		utils.RetErr(c, err)
 		return
 	}
-	utils.RetData(c, gin.H{"code": 0, "containers": containers})
+	containers := make([]*docker_manager.Container, len(containerAttrs))
+	for i := range containerAttrs {
+		containers[i] = dto.ToContainer(containerAttrs[i])
+	}
+	resp = &docker_manager.GetAllContainersResponse{Containers: containers}
+
+	return
 }
 
-func GetContainers()
+func GetContainers() {
+
+}

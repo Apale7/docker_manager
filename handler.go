@@ -10,37 +10,56 @@ import (
 	"docker_manager/proto/docker_manager"
 )
 
+// DockerManagerServer DockerManagerServer impl
 type DockerManagerServer struct {
 }
 
-func (DockerManagerServer) CreateContainer(context.Context, *docker_manager.CreateContainerRequest) (*docker_manager.CreateContainerResponse, error) {
+// CreateContainer create a container for a user
+func (DockerManagerServer) CreateContainer(ctx context.Context, req *docker_manager.CreateContainerRequest) (resp *docker_manager.CreateContainerResponse, err error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateContainer not implemented")
 }
-func (DockerManagerServer) DeleteContainer(context.Context, *docker_manager.DeleteContainerRequest) (*docker_manager.DeleteContainerResponse, error) {
+
+// DeleteContainer delete a container for a user
+func (DockerManagerServer) DeleteContainer(ctx context.Context, req *docker_manager.DeleteContainerRequest) (resp *docker_manager.DeleteContainerResponse, err error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteContainer not implemented")
 }
-func (DockerManagerServer) GetContainer(context.Context, *docker_manager.GetContainerRequest) (*docker_manager.GetContainerResponse, error) {
+
+// GetContainer get containers by container_id or user_id
+func (DockerManagerServer) GetContainer(ctx context.Context, req *docker_manager.GetContainerRequest) (resp *docker_manager.GetContainerResponse, err error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetContainer not implemented")
 }
-func (DockerManagerServer) PruneContainers(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
+
+// PruneContainers delete all unused containers
+func (DockerManagerServer) PruneContainers(ctx context.Context, req *emptypb.Empty) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PruneContainers not implemented")
 }
-func (DockerManagerServer) CreateImage(context.Context, *docker_manager.CreateImageRequest) (*docker_manager.CreateImageResponse, error) {
+
+// CreateImage create a image for a user
+func (DockerManagerServer) CreateImage(ctx context.Context, req *docker_manager.CreateImageRequest) (resp *docker_manager.CreateImageResponse, err error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateImage not implemented")
 }
-func (DockerManagerServer) DeleteImage(context.Context, *docker_manager.DeleteImageRequest) (*docker_manager.DeleteImageResponse, error) {
+
+// DeleteImage delete a image for a user
+func (DockerManagerServer) DeleteImage(ctx context.Context, req *docker_manager.DeleteImageRequest) (resp *docker_manager.DeleteImageResponse, err error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteImage not implemented")
 }
-func (DockerManagerServer) GetImage(context.Context, *docker_manager.GetImageRequest) (*docker_manager.GetImageResponse, error) {
+
+// GetImage get images by image_id or user_id
+func (DockerManagerServer) GetImage(ctx context.Context, req *docker_manager.GetImageRequest) (resp *docker_manager.GetImageResponse, err error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetImage not implemented")
 }
-func (DockerManagerServer) PruneImages(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
+
+// PruneImages delete all unused images
+func (DockerManagerServer) PruneImages(ctx context.Context, req *emptypb.Empty) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PruneImages not implemented")
 }
 
-func (DockerManagerServer) GetAllContainers(context.Context, *emptypb.Empty) (*docker_manager.GetAllContainersResponse, error) {
+// GetAllContainers get all containers
+func (DockerManagerServer) GetAllContainers(ctx context.Context, req *emptypb.Empty) (resp *docker_manager.GetAllContainersResponse, err error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllContainers not implemented")
 }
-func (DockerManagerServer) GetAllImages(context.Context, *emptypb.Empty) (*docker_manager.GetAllImagesResponse, error) {
+
+// GetAllImages get all images
+func (DockerManagerServer) GetAllImages(ctx context.Context, req *emptypb.Empty) (resp *docker_manager.GetAllImagesResponse, err error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllImages not implemented")
 }
