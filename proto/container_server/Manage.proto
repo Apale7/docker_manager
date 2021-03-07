@@ -71,7 +71,7 @@ message CreateContainer_Request{
      string container_name = 3;
 }
 message CreateContainer_Response{
-     string container_id = 1;
+     ContainerAttr container_attr = 1;
 }
 
 message GetFile_Request{
@@ -180,7 +180,7 @@ service Manager{
      rpc RemoveContainer(RemoveContainer_Request) returns (RemoveContainer_Response) {}
      rpc CreateContainer(CreateContainer_Request) returns (CreateContainer_Response) {}
 
-     //所有的data为tar
+//所有的data为tar
      rpc GetFile(GetFile_Request) returns (stream GetFile_Response) {} 
      rpc UpdateFile(UpdateFile_Request) returns (UpdateFile_Response){}
      rpc ListFile(ListFile_Request) returns (ListFile_Response) {}

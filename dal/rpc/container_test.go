@@ -28,42 +28,6 @@ func TestGetContainer(t *testing.T) {
 	}
 }
 
-func TestAll(t *testing.T) {
-	containers, err := GetAllContainers(ctx)
-	if err != nil {
-		t.Logf("GetAllContainers error: %+v", err)
-		t.FailNow()
-	}
-	n := len(containers)
-	images, err := GetAllImages(ctx)
-	if err != nil {
-		t.Logf("GetAllImages error: %+v", err)
-		t.FailNow()
-	}
-	image := images[len(images)-1]
-	containerID, err := CreateContainer(ctx, image.Id, image.Author, "cyq_test")
-	if err != nil {
-		t.Logf("CreateContainer error: %+v", err)
-		// t.FailNow()
-	}
-	containers, err = GetAllContainers(ctx)
-	if err != nil || len(containers) != n+1 {
-		t.Logf("CreateContainer error: %+v", err)
-		// t.FailNow()
-	}
-	n = len(containers)
-	err = DeleteContainer(ctx, containerID)
-	if err != nil {
-		t.Logf("DeleteContainer error: %+v", err)
-		t.FailNow()
-	}
-	containers, err = GetAllContainers(ctx)
-	if err != nil || len(containers) != n-1 {
-		t.Logf("DeleteContainer error: %+v", err)
-		t.FailNow()
-	}
-}
-
 func TestDeleteContainer(t *testing.T) {
 	err := DeleteContainer(ctx, "1d240c395a70ef641c41923b375eaad93c174c112fe991935533cde4933bc7dd")
 	if err != nil {

@@ -30,6 +30,7 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+	db = db.Debug()
 	log.Info("mysql连接成功")
 
 }

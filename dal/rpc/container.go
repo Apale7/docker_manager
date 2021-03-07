@@ -58,7 +58,7 @@ func DeleteContainer(ctx context.Context, containerID string) (err error) {
 	return
 }
 
-func CreateContainer(ctx context.Context, imageID, username, containerName string) (containerID string, err error) {
+func CreateContainer(ctx context.Context, imageID, username, containerName string) (containerAttr *containerManager.ContainerAttr, err error) {
 	req := &containerManager.CreateContainer_Request{
 		ImageId:       imageID,
 		Username:      username,
@@ -70,5 +70,5 @@ func CreateContainer(ctx context.Context, imageID, username, containerName strin
 		return
 	}
 
-	return resp.ContainerId, nil
+	return resp.ContainerAttr, nil
 }

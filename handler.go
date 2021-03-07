@@ -2,11 +2,13 @@ package main
 
 import (
 	"context"
+	"fmt"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 
+	"docker_manager/handler"
 	"docker_manager/proto/docker_manager"
 )
 
@@ -16,22 +18,26 @@ type DockerManagerServer struct {
 
 // CreateContainer create a container for a user
 func (DockerManagerServer) CreateContainer(ctx context.Context, req *docker_manager.CreateContainerRequest) (resp *docker_manager.CreateContainerResponse, err error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateContainer not implemented")
+	fmt.Println("CreateContainer called.")
+	return handler.CreateContainer(ctx, req)
 }
 
 // DeleteContainer delete a container for a user
 func (DockerManagerServer) DeleteContainer(ctx context.Context, req *docker_manager.DeleteContainerRequest) (resp *docker_manager.DeleteContainerResponse, err error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteContainer not implemented")
+	fmt.Println("DeleteContainer called.")
+	return handler.DeleteContainer(ctx, req)
 }
 
 // GetContainer get containers by container_id or user_id
 func (DockerManagerServer) GetContainer(ctx context.Context, req *docker_manager.GetContainerRequest) (resp *docker_manager.GetContainerResponse, err error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetContainer not implemented")
+	fmt.Println("GetContainer called.")
+	return handler.GetContainer(ctx, req)
 }
 
 // PruneContainers delete all unused containers
 func (DockerManagerServer) PruneContainers(ctx context.Context, req *emptypb.Empty) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method PruneContainers not implemented")
+	fmt.Println("PruneContainers called.")
+	return handler.PruneContainers(ctx, req)
 }
 
 // CreateImage create a image for a user
@@ -56,7 +62,7 @@ func (DockerManagerServer) PruneImages(ctx context.Context, req *emptypb.Empty) 
 
 // GetAllContainers get all containers
 func (DockerManagerServer) GetAllContainers(ctx context.Context, req *emptypb.Empty) (resp *docker_manager.GetAllContainersResponse, err error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetAllContainers not implemented")
+	return handler.GetAllContainers(ctx)
 }
 
 // GetAllImages get all images
