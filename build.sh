@@ -6,7 +6,7 @@ NAME="docker_manager"
 #     proto/*/*.proto
 find ./ -name "*.go" | xargs gofmt -w -s -l
 mkdir -p output/bin output/config
-cp -r config/ output/config/
+cp -r config/ output/
 
 
 name=`uname -o`
