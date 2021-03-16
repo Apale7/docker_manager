@@ -27,8 +27,6 @@ type DockerManagerClient interface {
 	DeleteImage(ctx context.Context, in *DeleteImageRequest, opts ...grpc.CallOption) (*DeleteImageResponse, error)
 	GetImage(ctx context.Context, in *GetImageRequest, opts ...grpc.CallOption) (*GetImageResponse, error)
 	PruneImages(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	GetAllContainers(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetAllContainersResponse, error)
-	GetAllImages(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetAllImagesResponse, error)
 }
 
 type dockerManagerClient struct {
@@ -111,24 +109,6 @@ func (c *dockerManagerClient) PruneImages(ctx context.Context, in *emptypb.Empty
 	return out, nil
 }
 
-func (c *dockerManagerClient) GetAllContainers(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetAllContainersResponse, error) {
-	out := new(GetAllContainersResponse)
-	err := c.cc.Invoke(ctx, "/docker_manager.DockerManager/GetAllContainers", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *dockerManagerClient) GetAllImages(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetAllImagesResponse, error) {
-	out := new(GetAllImagesResponse)
-	err := c.cc.Invoke(ctx, "/docker_manager.DockerManager/GetAllImages", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // DockerManagerServer is the server API for DockerManager service.
 // All implementations must embed UnimplementedDockerManagerServer
 // for forward compatibility
@@ -141,8 +121,6 @@ type DockerManagerServer interface {
 	DeleteImage(context.Context, *DeleteImageRequest) (*DeleteImageResponse, error)
 	GetImage(context.Context, *GetImageRequest) (*GetImageResponse, error)
 	PruneImages(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
-	GetAllContainers(context.Context, *emptypb.Empty) (*GetAllContainersResponse, error)
-	GetAllImages(context.Context, *emptypb.Empty) (*GetAllImagesResponse, error)
 }
 
 // UnimplementedDockerManagerServer must be embedded to have forward compatible implementations.
@@ -172,12 +150,6 @@ func (UnimplementedDockerManagerServer) GetImage(context.Context, *GetImageReque
 }
 func (UnimplementedDockerManagerServer) PruneImages(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PruneImages not implemented")
-}
-func (UnimplementedDockerManagerServer) GetAllContainers(context.Context, *emptypb.Empty) (*GetAllContainersResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetAllContainers not implemented")
-}
-func (UnimplementedDockerManagerServer) GetAllImages(context.Context, *emptypb.Empty) (*GetAllImagesResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetAllImages not implemented")
 }
 func (UnimplementedDockerManagerServer) mustEmbedUnimplementedDockerManagerServer() {}
 
@@ -336,42 +308,6 @@ func _DockerManager_PruneImages_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DockerManager_GetAllContainers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DockerManagerServer).GetAllContainers(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/docker_manager.DockerManager/GetAllContainers",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DockerManagerServer).GetAllContainers(ctx, req.(*emptypb.Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DockerManager_GetAllImages_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DockerManagerServer).GetAllImages(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/docker_manager.DockerManager/GetAllImages",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DockerManagerServer).GetAllImages(ctx, req.(*emptypb.Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // DockerManager_ServiceDesc is the grpc.ServiceDesc for DockerManager service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -410,14 +346,6 @@ var DockerManager_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PruneImages",
 			Handler:    _DockerManager_PruneImages_Handler,
-		},
-		{
-			MethodName: "GetAllContainers",
-			Handler:    _DockerManager_GetAllContainers_Handler,
-		},
-		{
-			MethodName: "GetAllImages",
-			Handler:    _DockerManager_GetAllImages_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

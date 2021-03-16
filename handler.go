@@ -8,6 +8,7 @@ import (
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 
+	"docker_manager/dal/rpc"
 	"docker_manager/handler"
 	"docker_manager/proto/docker_manager"
 )
@@ -37,7 +38,7 @@ func (DockerManagerServer) GetContainer(ctx context.Context, req *docker_manager
 // PruneContainers delete all unused containers
 func (DockerManagerServer) PruneContainers(ctx context.Context, req *emptypb.Empty) (*emptypb.Empty, error) {
 	fmt.Println("PruneContainers called.")
-	return handler.PruneContainers(ctx, req)
+	return nil, rpc.PruneContainers(ctx)
 }
 
 // CreateImage create a image for a user
@@ -47,25 +48,15 @@ func (DockerManagerServer) CreateImage(ctx context.Context, req *docker_manager.
 
 // DeleteImage delete a image for a user
 func (DockerManagerServer) DeleteImage(ctx context.Context, req *docker_manager.DeleteImageRequest) (resp *docker_manager.DeleteImageResponse, err error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteImage not implemented")
+	return handler.DeleteImage(ctx, req)
 }
 
 // GetImage get images by image_id or user_id
 func (DockerManagerServer) GetImage(ctx context.Context, req *docker_manager.GetImageRequest) (resp *docker_manager.GetImageResponse, err error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetImage not implemented")
+	return handler.GetImage(ctx, req)
 }
 
 // PruneImages delete all unused images
 func (DockerManagerServer) PruneImages(ctx context.Context, req *emptypb.Empty) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method PruneImages not implemented")
-}
-
-// GetAllContainers get all containers
-func (DockerManagerServer) GetAllContainers(ctx context.Context, req *emptypb.Empty) (resp *docker_manager.GetAllContainersResponse, err error) {
-	return handler.GetAllContainers(ctx)
-}
-
-// GetAllImages get all images
-func (DockerManagerServer) GetAllImages(ctx context.Context, req *emptypb.Empty) (resp *docker_manager.GetAllImagesResponse, err error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetAllImages not implemented")
+	return nil, rpc.PruneImages(ctx)
 }

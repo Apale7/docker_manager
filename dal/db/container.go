@@ -42,14 +42,14 @@ func DeleteContainer(ctx context.Context, userID uint32, containerID string) (er
 		ContainerID: containerID,
 	}
 
-	db = db.Where("user_id = ? AND container_id = ?", userID, containerID).Delete(&userContainer)
+	db = db.Unscoped().Where("user_id = ? AND container_id = ?", userID, containerID).Delete(&userContainer)
 	if db.Error != nil {
 		logrus.Warnf("DeleteContainer error: %v", err)
 		return
 	}
 	if db.RowsAffected <= 0 {
 		logrus.Warnln("delete nothing")
-		return errors.New("Delete nothing")
+		return errors.New("delete nothing")
 	}
 	return
 }

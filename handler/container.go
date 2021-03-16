@@ -10,22 +10,7 @@ import (
 
 	"github.com/Apale7/common/utils"
 	"github.com/sirupsen/logrus"
-	"google.golang.org/protobuf/types/known/emptypb"
 )
-
-func GetAllContainers(ctx context.Context) (resp *docker_manager.GetAllContainersResponse, err error) {
-	containerAttrs, err := rpc.GetAllContainers(ctx)
-	if err != nil {
-		return
-	}
-	containers := make([]*docker_manager.Container, len(containerAttrs))
-	for i := range containerAttrs {
-		containers[i] = dto.ToContainer(containerAttrs[i])
-	}
-	resp = &docker_manager.GetAllContainersResponse{Containers: containers}
-
-	return
-}
 
 // CreateContainer 先创建container，再记录user与container的关系
 func CreateContainer(ctx context.Context, req *docker_manager.CreateContainerRequest) (resp *docker_manager.CreateContainerResponse, err error) {
@@ -75,11 +60,7 @@ func GetContainer(ctx context.Context, req *docker_manager.GetContainerRequest) 
 
 	resp.Containers = make([]*docker_manager.Container, 0, len(containers))
 	for _, c := range containers {
-		resp.Containers = append(resp.Containers, c.ToGRPCContainer())
+		resp.Containers = append(resp.Containers, dto.ModelContainerToDockerManagerContainer(c))
 	}
 	return
-}
-
-func PruneContainers(ctx context.Context, req *emptypb.Empty) (resp *emptypb.Empty, err error) {
-	return nil, rpc.PruneContainers(ctx)
 }

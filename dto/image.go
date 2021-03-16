@@ -1,13 +1,14 @@
-package model
+package dto
 
 import (
+	"docker_manager/dal/db/model"
 	"docker_manager/proto/docker_manager"
 	"encoding/json"
 
 	"github.com/sirupsen/logrus"
 )
 
-func (i *Image) ToGRPCImage() *docker_manager.Image {
+func ModerImageToDockerManagerImage(i *model.Image) *docker_manager.Image {
 	return &docker_manager.Image{
 		Id:       i.ImageID,
 		Author:   i.Author,

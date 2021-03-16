@@ -2,18 +2,37 @@ package handler
 
 import (
 	"context"
+	"docker_manager/dal/db"
 	"docker_manager/dal/rpc"
-
-	"github.com/Apale7/common/utils"
-	"github.com/gin-gonic/gin"
+	"docker_manager/dto"
+	"docker_manager/proto/docker_manager"
 )
 
-func GetImages(c *gin.Context) {
-	ctx := context.Background()
-	containers, err := rpc.GetAllImages(ctx)
+// func  CreateImage(ctx context.Context, req *docker_manager.CreateImageRequest) (resp *docker_manager.CreateImageResponse, err error) {
+// 	rpc.BuildImage(ctx, req.Dockerfile)
+// }
+
+func DeleteImage(ctx context.Context, req *docker_manager.DeleteImageRequest) (resp *docker_manager.DeleteImageResponse, err error) {
+	err = rpc.DeleteImage(ctx, req.ImageId, req.Force)
 	if err != nil {
-		utils.RetErr(c, err)
 		return
 	}
-	utils.RetData(c, gin.H{"code": 0, "images": containers})
+
+	err = db.DeleteImage(ctx, req.UserId, req.ImageId)
+	return
+}
+
+func GetImage(ctx context.Context, req *docker_manager.GetImageRequest) (resp *docker_manager.GetImageResponse, err error) {
+	resp = &docker_manager.GetImageResponse{}
+	images, err := db.GetImage(ctx, req.UserId, req.ImageId)
+
+	if err != nil {
+		return
+	}
+
+	resp.Images = make([]*docker_manager.Image, 0, len(images))
+	for _, i := range images {
+		resp.Images = append(resp.Images, dto.ModerImageToDockerManagerImage(i))
+	}
+	return
 }

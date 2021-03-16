@@ -12,8 +12,6 @@ service DockerManager {
     rpc DeleteImage(DeleteImageRequest) returns (DeleteImageResponse) {}
     rpc GetImage(GetImageRequest) returns (GetImageResponse) {}
     rpc PruneImages(google.protobuf.Empty) returns (google.protobuf.Empty) {}
-    rpc GetAllContainers(google.protobuf.Empty) returns (GetAllContainersResponse) {}
-    rpc GetAllImages(google.protobuf.Empty) returns (GetAllImagesResponse) {}
 }
 
 message CreateContainerRequest {
@@ -70,7 +68,7 @@ message DeleteContainerResponse {
 
 message CreateImageRequest {
     uint32 user_id = 1;
-    string image_id = 2;
+    bytes dockerfile = 2;
     
     base.Base base = 255;
 }
@@ -103,22 +101,10 @@ message GetImageResponse {
 message DeleteImageRequest {
     uint32 user_id = 1;
     string image_id = 2;
-
+    bool force = 3;//镜像正在被使用，非force删除会失败
     base.Base base = 255;
 }
 
 message DeleteImageResponse {
-    base.BaseResp base_resp = 255;
-}
-
-message GetAllContainersResponse {
-    repeated Container containers = 1;
-
-    base.BaseResp base_resp = 255;
-}
-
-message GetAllImagesResponse {
-    repeated Image images = 1;
-
     base.BaseResp base_resp = 255;
 }
