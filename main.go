@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	addr = "localhost:8888"
+	addr = "127.0.0.1:8888"
 )
 
 var (
@@ -23,6 +23,9 @@ var (
 
 func main() {
 	logrus.SetReportCaller(true)
+	logrus.SetFormatter(&logrus.TextFormatter{
+		ForceColors: true,
+	})
 	lis, err := net.Listen("tcp", addr)
 	if err != nil {
 		logrus.Fatalf("failed to listen: %+v", err)
