@@ -19,13 +19,15 @@ func CreateContainer(ctx context.Context, req *docker_manager.CreateContainerReq
 	containerAttr, err := rpc.CreateContainer(ctx, req.ImageId, req.Username, req.ContainerName)
 
 	if err != nil {
-		logrus.Warnf("CreateContainer error: %v", err)
+		logrus.Warnf("RPC CreateContainer error: %v", err)
 		// resp.BaseResp.
 		return
 	}
-	err = db.CreateContainer(ctx, req.UserId, containerAttr.ToDBContainer())
+	container := containerAttr.ToDBContainer()
+	container.Name = req.ContainerName
+	err = db.CreateContainer(ctx, req.UserId, container)
 	if err != nil {
-		logrus.Warnf("CreateContainer error: %v", err)
+		logrus.Warnf("DB CreateContainer error: %v", err)
 		return
 	}
 

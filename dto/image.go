@@ -2,6 +2,7 @@ package dto
 
 import (
 	"docker_manager/dal/db/model"
+	containerManager "docker_manager/proto/container_server"
 	"docker_manager/proto/docker_manager"
 	"encoding/json"
 
@@ -26,4 +27,17 @@ func getTags(jsonStr string) (res []string) {
 	}
 
 	return res
+}
+
+func RPCImageToModelImage(i *containerManager.ImageAttr) *model.Image {
+	tags, err := json.Marshal(i.RepoTags)
+	if err != nil {
+		logrus.Warnf("json marshal error, err: %v", err)
+	}
+	return &model.Image{
+		ImageID:   i.Id,
+		RepoTags:  string(tags),
+		ImageSize: i.Size,
+		Author:    i.Author,
+	}
 }

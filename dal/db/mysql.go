@@ -2,6 +2,7 @@ package db
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
@@ -38,6 +39,9 @@ func init() {
 func getDbConf() mysqlConf {
 	viper.SetConfigName("db_conf")
 	viper.AddConfigPath("./config")
+	if os.Getenv("ENV") == "dev" {
+		viper.AddConfigPath(os.Getenv("CODE") + "/docker_manager/config")
+	}
 	if err = viper.ReadInConfig(); err != nil {
 		log.Error(errors.WithStack(err))
 		panic("viper readInConfig error")

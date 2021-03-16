@@ -1,13 +1,24 @@
 syntax = "proto3";
 
+message FileStat{
+     enum FileType{
+          FILE = 0;
+          FOLDER = 1;
+          LINK = 2;
+     }
+     FileType file_type = 1;
+     string file_name = 2;
+}
 message ContainerAttr{
      enum ContainerStatus{
-          Running = 0;
-          Paused = 1;
-          Restarting = 2;
-          OOMKilled = 3;
-          Dead = 4;
-          UNKNOWN = 5; 
+          CREATED = 0;
+          RESTARTING = 1;
+          RUNNING = 2;
+          REMOVING = 3;
+          PAUSED = 4;
+          EXITED = 5;
+          DEAD = 6;
+          UNKNOWN = 7; 
      }
      string id = 1;
      string created = 2;
@@ -41,7 +52,12 @@ message GetContainer_Request{
      string container_id = 1;
 }
 message GetContainer_Response{
-     ContainerAttr container_attr = 1;
+     enum ExitCode{
+          SUCCESS = 0;
+          NOTFOUND = 1;
+     }
+     ExitCode exit_code = 1;
+     ContainerAttr container_attr = 2;
 }
 
 message StartContainer_Request{
@@ -79,7 +95,8 @@ message GetFile_Request{
      string path = 2;
 }
 message GetFile_Response{
-     bytes data = 1;
+     string version = 1;
+     bytes data = 2;
 }
 
 message UpdateFile_Request{
@@ -108,15 +125,6 @@ message ListFile_Request{
      string container_id = 1;
      string path = 2;
 }
-message FileStat{
-     enum FileType{
-          FILE = 0;
-          FOLDER = 1;
-          LINK = 2;
-     }
-     FileType file_type = 1;
-     string file_name = 2;
-}
 message ListFile_Response{
      enum ExitCode {
           SUCCESS = 0;
@@ -144,20 +152,37 @@ message PullImage_Response{}
 
 message BuildImage_Request{
      bytes dockerfile = 1;
+     string tag = 2; //ubuntu:18.04
 }
-message BuildImage_Response{}
+message BuildImage_Response{
+     enum ExitCode{
+          SUCCESS = 0;
+          ERROR = 1;
+     }
+     ExitCode exit_code = 1;
+     ImageAttr image_attr = 2;
+}
 
 message LoadImage_Request{
      bytes data = 1;
 }
 message LoadImage_Response{
-     repeated string image_id = 1;
+     enum ExitCode{
+          SUCCESS = 0;
+          ERROR = 1;
+     }
+     ExitCode exit_code = 1;
+     repeated ImageAttr image_attr = 2;
 }
 
 message GetImage_Request{
      string image_id = 1;
 }
 message GetImage_Response{
+     enum ExitCode{
+          SUCCESS = 0;
+          NOTFOUND = 1;
+     }
      ImageAttr image_attr = 1;
 }
 
@@ -180,7 +205,7 @@ service Manager{
      rpc RemoveContainer(RemoveContainer_Request) returns (RemoveContainer_Response) {}
      rpc CreateContainer(CreateContainer_Request) returns (CreateContainer_Response) {}
 
-//所有的data为tar
+     //所有的data为tar
      rpc GetFile(GetFile_Request) returns (stream GetFile_Response) {} 
      rpc UpdateFile(UpdateFile_Request) returns (UpdateFile_Response){}
      rpc ListFile(ListFile_Request) returns (ListFile_Response) {}
@@ -195,5 +220,4 @@ service Manager{
      rpc RemoveImage(RemoveImage_Request) returns (RemoveImage_Response){}
 
 //BackupUtils
-     
 }

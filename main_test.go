@@ -1,12 +1,18 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"os"
 	"testing"
-	"time"
 )
 
 func Test(t *testing.T) {
-	ti, _ := time.Parse(time.RFC3339Nano, "2020-12-18T12:21:06.637698261Z")
-	fmt.Println(ti.Unix())
+	b, _ := os.ReadFile("./tmp/dockerfile")
+	fmt.Println(string(b))
+	bs, err := json.Marshal(string(b))
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(bs))
 }

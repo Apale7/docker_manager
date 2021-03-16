@@ -8,9 +8,19 @@ import (
 	"docker_manager/proto/docker_manager"
 )
 
-// func  CreateImage(ctx context.Context, req *docker_manager.CreateImageRequest) (resp *docker_manager.CreateImageResponse, err error) {
-// 	rpc.BuildImage(ctx, req.Dockerfile)
-// }
+func CreateImage(ctx context.Context, req *docker_manager.CreateImageRequest) (resp *docker_manager.CreateImageResponse, err error) {
+	imageAttr, err := rpc.BuildImage(ctx, req.Dockerfile)
+	if err != nil {
+		return
+	}
+
+	err = db.CreateImage(ctx, req.UserId, dto.RPCImageToModelImage(imageAttr))
+	if err != nil {
+		return
+	}
+	resp = &docker_manager.CreateImageResponse{}
+	return
+}
 
 func DeleteImage(ctx context.Context, req *docker_manager.DeleteImageRequest) (resp *docker_manager.DeleteImageResponse, err error) {
 	err = rpc.DeleteImage(ctx, req.ImageId, req.Force)

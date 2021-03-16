@@ -12,15 +12,15 @@ import (
 func GetImage(ctx context.Context, userID uint32, imageID string) (images []*model.Image, err error) {
 	db := db.WithContext(ctx)
 	if imageID != "" {
-		err = db.Where("image_id=?", imageID).Find(&images).Error
+		err = db.Model(&model.Image{}).Where("image_id=?", imageID).Find(&images).Error
 		return
 	}
 	var imageIDs []string
-	err = db.Where("user_id=?", userID).Pluck("image_id", imageIDs).Error
+	err = db.Model(&model.UserImage{}).Select("image_id").Where("user_id=?", userID).Pluck("image_id", imageIDs).Error
 	if err != nil || len(imageIDs) == 0 {
 		return
 	}
-	err = db.Where("image_id in ?", imageIDs).Find(&images).Error
+	err = db.Model(&model.Image{}).Where("image_id in ?", imageIDs).Find(&images).Error
 	return
 }
 
@@ -44,11 +44,11 @@ func CreateImage(ctx context.Context, userID uint32, image *model.Image) (err er
 
 func DeleteImage(ctx context.Context, userID uint32, imageID string) (err error) {
 	userImage := model.UserImage{
-		UserID:	  userID,
+		UserID:  userID,
 		ImageID: imageID,
 	}
 	db := db.Unscoped().WithContext(ctx).Where("user_id = ? AND image_id = ?", userID, imageID).Delete(&userImage)
-	if db.Error != nil{
+	if db.Error != nil {
 		return
 	}
 	if db.RowsAffected <= 0 {

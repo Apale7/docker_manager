@@ -2,14 +2,27 @@ package rpc
 
 import (
 	"context"
+	"docker_manager/dal/db"
+	"docker_manager/dto"
+	"fmt"
 	"testing"
+
+	"github.com/sirupsen/logrus"
 )
 
 func TestGetImages(t *testing.T) {
 	ctx := context.Background()
-	_, err := GetAllImages(ctx)
+	images, err := GetAllImages(ctx)
 	if err != nil {
+		t.Error(err)
 		t.FailNow()
 	}
-	// fmt.Printf("%+v", resp)
+	for _, i := range images {
+		err := db.CreateImage(ctx, 2, dto.RPCImageToModelImage(i))
+		if err != nil {
+			logrus.Errorln(err)
+			t.FailNow()
+		}
+		fmt.Println(i.Id + " created.")
+	}
 }

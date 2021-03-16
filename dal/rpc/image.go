@@ -36,14 +36,14 @@ func PullImage(ctx context.Context, repository, tag string, authConf *containerM
 	return
 }
 
-func BuildImage(ctx context.Context, dockerfile []byte) (imageID string, err error) {
+func BuildImage(ctx context.Context, dockerfile []byte) (imageAttr *containerManager.ImageAttr, err error) {
 	req := &containerManager.BuildImage_Request{Dockerfile: dockerfile}
-	_, err = containerManagerClient.BuildImage(ctx, req)
+	resp, err := containerManagerClient.BuildImage(ctx, req)
 	if err != nil {
 		return
 	}
 
-	return
+	return resp.ImageAttr, nil
 }
 
 func GetImage(ctx context.Context, imageID string) (image *containerManager.ImageAttr, err error) {

@@ -3,6 +3,9 @@ package rpc
 import (
 	"context"
 	containerManager "docker_manager/proto/container_server"
+	"fmt"
+
+	"github.com/satori/go.uuid"
 )
 
 func GetAllContainers(ctx context.Context) (containers []*containerManager.ContainerAttr, err error) {
@@ -62,7 +65,7 @@ func CreateContainer(ctx context.Context, imageID, username, containerName strin
 	req := &containerManager.CreateContainer_Request{
 		ImageId:       imageID,
 		Username:      username,
-		ContainerName: containerName,
+		ContainerName: fmt.Sprintf("%s_%s", username, uuid.NewV4().String()), //业务中不关心k8s的container_name
 	}
 	resp, err := containerManagerClient.CreateContainer(ctx, req)
 

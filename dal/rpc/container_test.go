@@ -2,7 +2,6 @@ package rpc
 
 import (
 	"context"
-	Manage "docker_manager/proto/container_server"
 	"fmt"
 	"testing"
 )
@@ -15,8 +14,11 @@ func TestGetContainers(t *testing.T) {
 		t.FailNow()
 	}
 	for _, v := range resp {
-		// continue
-		fmt.Printf("%+v\n", v)
+		// err := db.CreateContainer(ctx, 2, dto.RPCContainerToModelContainer(v))
+		// if err != nil {
+		// 	logrus.Errorln("name too long: " + v.Name)
+		// }
+		fmt.Printf("%+v %s\n", v.Id, v.Status.String())
 	}
 }
 
@@ -51,12 +53,6 @@ func TestStopContainers(t *testing.T) {
 	err := StopContainer(ctx, c[1].Id)
 	if err != nil {
 		t.Logf("StopContainer error: %+v", err)
-		t.FailNow()
-	}
-
-	tmp, _ := GetContainer(ctx, c[1].Id)
-	if tmp.Status != Manage.ContainerAttr_Paused {
-		t.Logf("StopContainer error")
 		t.FailNow()
 	}
 
