@@ -121,7 +121,6 @@ type DockerManagerServer interface {
 	DeleteImage(context.Context, *DeleteImageRequest) (*DeleteImageResponse, error)
 	GetImage(context.Context, *GetImageRequest) (*GetImageResponse, error)
 	PruneImages(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
-	mustEmbedUnimplementedDockerManagerServer()
 }
 
 // UnimplementedDockerManagerServer must be embedded to have forward compatible implementations.

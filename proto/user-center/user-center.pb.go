@@ -7,10 +7,10 @@
 package user_center
 
 import (
+	base "docker_manager/proto/base"
 	proto "github.com/golang/protobuf/proto"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	base "docker_manager/proto/base"
 	reflect "reflect"
 	sync "sync"
 )
