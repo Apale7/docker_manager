@@ -88,7 +88,7 @@ message Image{
 message GetImageRequest {
     uint32 user_id = 1;
     string image_id = 2;
-
+    bool is_admin = 3;//对管理员返回他创建的所有image；对非管理员返回所有有权限使用的image
     base.Base base = 255;
 }
 

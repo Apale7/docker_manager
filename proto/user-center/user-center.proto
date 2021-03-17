@@ -7,15 +7,16 @@ message User
     int32 id = 1;
     string username = 2;
     string password = 3;
-    int32 user_extra_id = 4;
 }
 
 message UserExtra
 {
     int32 id = 1;
-    string nickname = 2;
-    string email = 3;
-    string phone_number = 4;
+    int32 user_id = 2;
+    string nickname = 3;
+    string email = 4;
+    string phone_number = 5;
+    string avatar_url = 6;
 }
 
 message RegisterRequest
@@ -43,7 +44,10 @@ message LoginRequest
 
 message LoginResponse
 {
-    string token = 1;
+    string access_token = 1;
+    string refresh_token = 2;
+    int64 access_exp = 3;
+    int64 refresh_exp = 4;
 
     base.BaseResp base_resp = 255;
 }
@@ -61,18 +65,123 @@ message DeleteResponse
 
 message CheckTokenRequest {
     string token = 1;
+    bool isRefresh = 2;
+    
+    base.Base base = 255;
+}
+
+message UserInfo {
+    int32 user_id = 1;
+    string username = 2;
+    string nickname = 3;
+    string email = 4;
+    string phone_number = 5;
+    string avatar_url = 6;
+}
+
+message CheckTokenResponse {
+    UserInfo user = 1;
+
+    base.BaseResp base_resp = 255;
+}
+
+message RefreshRequest {
+    string refresh_token = 1;
 
     base.Base base = 255;
 }
 
-message CheckTokenResponse {
+message RefreshResponse {
+    string access_token = 1;
+    string refresh_token = 2;
+    int64 access_exp = 3;
+    int64 refresh_exp = 4;
+    
     base.BaseResp base_resp = 255;
 }
 
+// group相关协议
+
+message Group {
+    uint32 id = 1;
+    uint64 created_at = 2;
+    uint64 updated_at = 3;
+    uint32 owner_id = 4;
+    string group_name = 5;
+}
+
+message CreateGroupRequest {
+    uint32 owner_id = 1;
+    string group_name = 2;
+
+    base.Base base = 255;
+}
+
+message CreateGroupResponse {
+    Group group = 1;
+
+    base.BaseResp base_resp = 255;
+}
+
+message JoinGroupRequest {
+    uint32 user_id = 1;
+    uint32 group_id = 2;
+
+    base.Base base = 255;
+}
+
+message JoinGroupResponse {
+    base.BaseResp base_resp = 255;
+}
+
+message ExitGroupRequest {
+    uint32 user_id = 1;
+    uint32 group_id = 2;
+
+    base.Base base = 255;
+}
+
+message ExitGroupResponse {
+    base.BaseResp base_resp = 255;
+}
+
+message GetGroupRequest {
+    Group group_info = 1;
+    uint32 member_id = 2;
+    base.Base base = 255;
+}
+
+message GetGroupResponse {
+    repeated Group groups = 1;
+
+    base.BaseResp base_resp = 255;
+}
+
+message GetGroupMembersRequest {
+    uint32 group_id = 1;
+
+    base.Base base = 255;
+}
+
+message GetGroupMembersResponse {
+    repeated UserExtra members = 1;
+
+    base.BaseResp base_resp = 255;
+}
+
+
 service UserCenter
 {
+// 账户相关
     rpc Register(RegisterRequest) returns(RegisterResponse) {}
     rpc Login(LoginRequest) returns (LoginResponse) {}
     rpc Delete(DeleteRequest) returns (DeleteResponse) {}
     rpc CheckToken(CheckTokenRequest) returns (CheckTokenResponse) {}
+    rpc Refresh(RefreshRequest) returns (RefreshResponse) {}
+// 组织管理相关
+    rpc CreateGroup(CreateGroupRequest) returns (CreateGroupResponse) {}
+    rpc GetGroup(GetGroupRequest) returns (GetGroupResponse) {}
+    rpc GetGroupMembers(GetGroupMembersRequest) returns (GetGroupMembersResponse) {}
+    rpc JoinGroup(JoinGroupRequest) returns (JoinGroupResponse) {}
+    rpc ExitGroup(ExitGroupRequest) returns (ExitGroupResponse) {}
 }

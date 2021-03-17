@@ -18,10 +18,18 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserCenterClient interface {
+	// 账户相关
 	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error)
 	CheckToken(ctx context.Context, in *CheckTokenRequest, opts ...grpc.CallOption) (*CheckTokenResponse, error)
+	Refresh(ctx context.Context, in *RefreshRequest, opts ...grpc.CallOption) (*RefreshResponse, error)
+	// 组织管理相关
+	CreateGroup(ctx context.Context, in *CreateGroupRequest, opts ...grpc.CallOption) (*CreateGroupResponse, error)
+	GetGroup(ctx context.Context, in *GetGroupRequest, opts ...grpc.CallOption) (*GetGroupResponse, error)
+	GetGroupMembers(ctx context.Context, in *GetGroupMembersRequest, opts ...grpc.CallOption) (*GetGroupMembersResponse, error)
+	JoinGroup(ctx context.Context, in *JoinGroupRequest, opts ...grpc.CallOption) (*JoinGroupResponse, error)
+	ExitGroup(ctx context.Context, in *ExitGroupRequest, opts ...grpc.CallOption) (*ExitGroupResponse, error)
 }
 
 type userCenterClient struct {
@@ -68,14 +76,76 @@ func (c *userCenterClient) CheckToken(ctx context.Context, in *CheckTokenRequest
 	return out, nil
 }
 
+func (c *userCenterClient) Refresh(ctx context.Context, in *RefreshRequest, opts ...grpc.CallOption) (*RefreshResponse, error) {
+	out := new(RefreshResponse)
+	err := c.cc.Invoke(ctx, "/user_center.UserCenter/Refresh", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userCenterClient) CreateGroup(ctx context.Context, in *CreateGroupRequest, opts ...grpc.CallOption) (*CreateGroupResponse, error) {
+	out := new(CreateGroupResponse)
+	err := c.cc.Invoke(ctx, "/user_center.UserCenter/CreateGroup", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userCenterClient) GetGroup(ctx context.Context, in *GetGroupRequest, opts ...grpc.CallOption) (*GetGroupResponse, error) {
+	out := new(GetGroupResponse)
+	err := c.cc.Invoke(ctx, "/user_center.UserCenter/GetGroup", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userCenterClient) GetGroupMembers(ctx context.Context, in *GetGroupMembersRequest, opts ...grpc.CallOption) (*GetGroupMembersResponse, error) {
+	out := new(GetGroupMembersResponse)
+	err := c.cc.Invoke(ctx, "/user_center.UserCenter/GetGroupMembers", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userCenterClient) JoinGroup(ctx context.Context, in *JoinGroupRequest, opts ...grpc.CallOption) (*JoinGroupResponse, error) {
+	out := new(JoinGroupResponse)
+	err := c.cc.Invoke(ctx, "/user_center.UserCenter/JoinGroup", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userCenterClient) ExitGroup(ctx context.Context, in *ExitGroupRequest, opts ...grpc.CallOption) (*ExitGroupResponse, error) {
+	out := new(ExitGroupResponse)
+	err := c.cc.Invoke(ctx, "/user_center.UserCenter/ExitGroup", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserCenterServer is the server API for UserCenter service.
 // All implementations must embed UnimplementedUserCenterServer
 // for forward compatibility
 type UserCenterServer interface {
+	// 账户相关
 	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	Delete(context.Context, *DeleteRequest) (*DeleteResponse, error)
 	CheckToken(context.Context, *CheckTokenRequest) (*CheckTokenResponse, error)
+	Refresh(context.Context, *RefreshRequest) (*RefreshResponse, error)
+	// 组织管理相关
+	CreateGroup(context.Context, *CreateGroupRequest) (*CreateGroupResponse, error)
+	GetGroup(context.Context, *GetGroupRequest) (*GetGroupResponse, error)
+	GetGroupMembers(context.Context, *GetGroupMembersRequest) (*GetGroupMembersResponse, error)
+	JoinGroup(context.Context, *JoinGroupRequest) (*JoinGroupResponse, error)
+	ExitGroup(context.Context, *ExitGroupRequest) (*ExitGroupResponse, error)
 	mustEmbedUnimplementedUserCenterServer()
 }
 
@@ -94,6 +164,24 @@ func (UnimplementedUserCenterServer) Delete(context.Context, *DeleteRequest) (*D
 }
 func (UnimplementedUserCenterServer) CheckToken(context.Context, *CheckTokenRequest) (*CheckTokenResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckToken not implemented")
+}
+func (UnimplementedUserCenterServer) Refresh(context.Context, *RefreshRequest) (*RefreshResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Refresh not implemented")
+}
+func (UnimplementedUserCenterServer) CreateGroup(context.Context, *CreateGroupRequest) (*CreateGroupResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateGroup not implemented")
+}
+func (UnimplementedUserCenterServer) GetGroup(context.Context, *GetGroupRequest) (*GetGroupResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetGroup not implemented")
+}
+func (UnimplementedUserCenterServer) GetGroupMembers(context.Context, *GetGroupMembersRequest) (*GetGroupMembersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetGroupMembers not implemented")
+}
+func (UnimplementedUserCenterServer) JoinGroup(context.Context, *JoinGroupRequest) (*JoinGroupResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method JoinGroup not implemented")
+}
+func (UnimplementedUserCenterServer) ExitGroup(context.Context, *ExitGroupRequest) (*ExitGroupResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ExitGroup not implemented")
 }
 func (UnimplementedUserCenterServer) mustEmbedUnimplementedUserCenterServer() {}
 
@@ -180,6 +268,114 @@ func _UserCenter_CheckToken_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserCenter_Refresh_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RefreshRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserCenterServer).Refresh(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user_center.UserCenter/Refresh",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserCenterServer).Refresh(ctx, req.(*RefreshRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserCenter_CreateGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateGroupRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserCenterServer).CreateGroup(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user_center.UserCenter/CreateGroup",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserCenterServer).CreateGroup(ctx, req.(*CreateGroupRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserCenter_GetGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetGroupRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserCenterServer).GetGroup(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user_center.UserCenter/GetGroup",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserCenterServer).GetGroup(ctx, req.(*GetGroupRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserCenter_GetGroupMembers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetGroupMembersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserCenterServer).GetGroupMembers(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user_center.UserCenter/GetGroupMembers",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserCenterServer).GetGroupMembers(ctx, req.(*GetGroupMembersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserCenter_JoinGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(JoinGroupRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserCenterServer).JoinGroup(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user_center.UserCenter/JoinGroup",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserCenterServer).JoinGroup(ctx, req.(*JoinGroupRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserCenter_ExitGroup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ExitGroupRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserCenterServer).ExitGroup(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user_center.UserCenter/ExitGroup",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserCenterServer).ExitGroup(ctx, req.(*ExitGroupRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserCenter_ServiceDesc is the grpc.ServiceDesc for UserCenter service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -202,6 +398,30 @@ var UserCenter_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CheckToken",
 			Handler:    _UserCenter_CheckToken_Handler,
+		},
+		{
+			MethodName: "Refresh",
+			Handler:    _UserCenter_Refresh_Handler,
+		},
+		{
+			MethodName: "CreateGroup",
+			Handler:    _UserCenter_CreateGroup_Handler,
+		},
+		{
+			MethodName: "GetGroup",
+			Handler:    _UserCenter_GetGroup_Handler,
+		},
+		{
+			MethodName: "GetGroupMembers",
+			Handler:    _UserCenter_GetGroupMembers_Handler,
+		},
+		{
+			MethodName: "JoinGroup",
+			Handler:    _UserCenter_JoinGroup_Handler,
+		},
+		{
+			MethodName: "ExitGroup",
+			Handler:    _UserCenter_ExitGroup_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

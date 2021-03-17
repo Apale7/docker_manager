@@ -6,6 +6,8 @@ import (
 	"docker_manager/dal/rpc"
 	"docker_manager/dto"
 	"docker_manager/proto/docker_manager"
+
+	"github.com/pkg/errors"
 )
 
 func CreateImage(ctx context.Context, req *docker_manager.CreateImageRequest) (resp *docker_manager.CreateImageResponse, err error) {
@@ -34,7 +36,22 @@ func DeleteImage(ctx context.Context, req *docker_manager.DeleteImageRequest) (r
 
 func GetImage(ctx context.Context, req *docker_manager.GetImageRequest) (resp *docker_manager.GetImageResponse, err error) {
 	resp = &docker_manager.GetImageResponse{}
-	images, err := db.GetImage(ctx, req.UserId, req.ImageId)
+
+	var userIDs []uint32
+	var imageIDs = []string{req.ImageId}
+	if req.IsAdmin {
+		//req传的是owner的userID
+		userIDs = []uint32{req.UserId}
+	} else {
+		//req传的是member的userID,转换成ownerID去查询
+		userIDs, err = getGroupOwnersByMemberID(ctx, uint(req.UserId))
+		if err != nil {
+			return nil, errors.WithStack(err)
+		}
+
+	}
+
+	images, err := db.GetImage(ctx, userIDs, imageIDs)
 
 	if err != nil {
 		return
@@ -43,6 +60,18 @@ func GetImage(ctx context.Context, req *docker_manager.GetImageRequest) (resp *d
 	resp.Images = make([]*docker_manager.Image, 0, len(images))
 	for _, i := range images {
 		resp.Images = append(resp.Images, dto.ModerImageToDockerManagerImage(i))
+	}
+	return
+}
+
+func getGroupOwnersByMemberID(ctx context.Context, memberID uint) (ownerIDs []uint32, err error) {
+	groups, err := rpc.GetGroup(ctx, nil, memberID)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+	ownerIDs = make([]uint32, 0, len(groups))
+	for _, g := range groups {
+		ownerIDs = append(ownerIDs, g.OwnerId)
 	}
 	return
 }

@@ -5,22 +5,26 @@ import (
 	"docker_manager/dal/db/model"
 	"errors"
 
+	oe "github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )
 
-func GetImage(ctx context.Context, userID uint32, imageID string) (images []*model.Image, err error) {
+// 有imageIDs就直接按id查，没有就按userID在user_image表中查imageIDs
+func GetImage(ctx context.Context, userIDs []uint32, imageIDs []string) (images []*model.Image, err error) {
 	db := db.WithContext(ctx)
-	if imageID != "" {
-		err = db.Model(&model.Image{}).Where("image_id=?", imageID).Find(&images).Error
-		return
+	if len(imageIDs) > 0 {
+		err = db.Model(&model.Image{}).Where("image_id in ?", imageIDs).Find(&images).Error
+	} else {
+		err = db.Model(&model.UserImage{}).Select("image_id").Where("user_id in ?", userIDs).Pluck("image_id", &imageIDs).Error
+		if err != nil {
+			return nil, oe.WithStack(err)
+		}
+		err = db.Model(&model.Image{}).Where("image_id in ?", imageIDs).Find(&images).Error
+
 	}
-	var imageIDs []string
-	err = db.Model(&model.UserImage{}).Select("image_id").Where("user_id=?", userID).Pluck("image_id", imageIDs).Error
-	if err != nil || len(imageIDs) == 0 {
-		return
-	}
-	err = db.Model(&model.Image{}).Where("image_id in ?", imageIDs).Find(&images).Error
+	err = oe.WithStack(err)
+
 	return
 }
 
