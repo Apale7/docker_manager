@@ -9,12 +9,15 @@ find ./ -name "*.go" | xargs gofmt -w -s -l
 mkdir -p output/bin output/config
 cp -r config/ output/
 
-
-name=`uname -o`
-if [[ $name =~ "Darwin" ]];then
+name=$1
+echo $name + "release is buliding"
+if [[ $name = "" ]];then
+    go build -o output/bin/${NAME}.out
+    chmod +x output/bin/${NAME}.out
+elif [[ $name =~ "mac" ]];then
     GOOS=darwin GOARCH=amd64 go build -o output/bin/${NAME}.out
     chmod +x output/bin/${NAME}.out
-elif [[ $name =~ "GNU/Linux" ]];then
+elif [[ $name =~ "linux" ]];then
     GOOS=linux GOARCH=amd64 go build -o output/bin/${NAME}.out
     chmod +x output/bin/${NAME}.out
 else
