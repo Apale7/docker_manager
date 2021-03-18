@@ -10,6 +10,9 @@ import (
 )
 
 func ModerImageToDockerManagerImage(i *model.Image) *docker_manager.Image {
+	if i == nil {
+		return &docker_manager.Image{}
+	}
 	return &docker_manager.Image{
 		Id:       i.ImageID,
 		Author:   i.Author,
@@ -30,6 +33,9 @@ func getTags(jsonStr string) (res []string) {
 }
 
 func RPCImageToModelImage(i *containerManager.ImageAttr) *model.Image {
+	if i == nil {
+		return &model.Image{}
+	}
 	tags, err := json.Marshal(i.RepoTags)
 	if err != nil {
 		logrus.Warnf("json marshal error, err: %v", err)

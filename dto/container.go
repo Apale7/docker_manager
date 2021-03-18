@@ -7,6 +7,9 @@ import (
 )
 
 func ModelContainerToDockerManagerContainer(c *model.Container) *docker_manager.Container {
+	if c == nil {
+		return &docker_manager.Container{}
+	}
 	return &docker_manager.Container{
 		Id:      c.ContainerID,
 		Created: c.CreatedAt.Local().Unix(),
@@ -17,6 +20,9 @@ func ModelContainerToDockerManagerContainer(c *model.Container) *docker_manager.
 }
 
 func RPCContainerToModelContainer(c *containerManager.ContainerAttr) *model.Container {
+	if c == nil {
+		return &model.Container{}
+	}
 	return &model.Container{
 		ContainerID: c.Id,
 		Status:      int8(c.Status),

@@ -38,7 +38,10 @@ func GetImage(ctx context.Context, req *docker_manager.GetImageRequest) (resp *d
 	resp = &docker_manager.GetImageResponse{}
 
 	var userIDs []uint32
-	var imageIDs = []string{req.ImageId}
+	var imageIDs []string
+	if req.ImageId != "" {
+		imageIDs = []string{req.ImageId}
+	}
 	if req.IsAdmin {
 		//req传的是owner的userID
 		userIDs = []uint32{req.UserId}
