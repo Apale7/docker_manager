@@ -31,7 +31,7 @@ func TestGetContainer(t *testing.T) {
 }
 
 func TestDeleteContainer(t *testing.T) {
-	err := DeleteContainer(ctx, "1d240c395a70ef641c41923b375eaad93c174c112fe991935533cde4933bc7dd")
+	err := DeleteContainer(ctx, "422a9705bc9c2f678df1be46158be2c7e770a3b94b9533bf6796b71a32cc226d")
 	if err != nil {
 		t.Logf("DeleteContainer error: %+v", err)
 		t.FailNow()

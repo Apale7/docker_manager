@@ -56,7 +56,7 @@ func RestartContainer(ctx context.Context, containerID string) (err error) {
 }
 
 func DeleteContainer(ctx context.Context, containerID string) (err error) {
-	_, err = containerManagerClient.RemoveContainer(ctx, &containerManager.RemoveContainer_Request{ContainerId: containerID})
+	_, err = containerManagerClient.RemoveContainer(ctx, &containerManager.RemoveContainer_Request{ContainerId: containerID, Force: true})
 
 	return
 }

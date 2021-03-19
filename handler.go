@@ -4,8 +4,6 @@ import (
 	"context"
 	"fmt"
 
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
 
 	"docker_manager/dal/rpc"
@@ -43,7 +41,8 @@ func (DockerManagerServer) PruneContainers(ctx context.Context, req *emptypb.Emp
 
 // CreateImage create a image for a user
 func (DockerManagerServer) CreateImage(ctx context.Context, req *docker_manager.CreateImageRequest) (resp *docker_manager.CreateImageResponse, err error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateImage not implemented")
+	fmt.Println("CreateImage called.")
+	return handler.CreateImage(ctx, req)
 }
 
 // DeleteImage delete a image for a user

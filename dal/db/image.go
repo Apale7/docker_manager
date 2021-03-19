@@ -40,7 +40,7 @@ func CreateImage(ctx context.Context, userID uint32, image *model.Image) (err er
 			panic("invalid image_id")
 		}
 
-		err = tx.FirstOrCreate(&model.UserImage{UserID: userID, ImageID: image.ImageID}).Error
+		err = tx.Create(&model.UserImage{UserID: userID, ImageID: image.ImageID}).Error
 		return
 	})
 	return

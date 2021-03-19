@@ -8,7 +8,6 @@ import (
 	"docker_manager/proto/base"
 	"docker_manager/proto/docker_manager"
 
-	"github.com/Apale7/common/utils"
 	"github.com/sirupsen/logrus"
 )
 
@@ -41,13 +40,11 @@ func DeleteContainer(ctx context.Context, req *docker_manager.DeleteContainerReq
 	if err != nil {
 		logrus.Warnf("DeleteContainer error: %v", err)
 	}
-	go utils.ProtectRun(func() {
-		err = rpc.DeleteContainer(ctx, req.ContainerId)
-		if err != nil { //失败了不处理，// todo: 自动删除长期不使用的容器
-			logrus.Warnf("DeleteContainer error: %v", err)
-			return
-		}
-	})
+	err = rpc.DeleteContainer(ctx, req.ContainerId)
+	if err != nil { //失败了不处理，// todo: 自动删除长期不使用的容器
+		logrus.Warnf("DeleteContainer error: %v", err)
+		return
+	}
 
 	return
 }

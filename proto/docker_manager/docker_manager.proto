@@ -28,12 +28,14 @@ message CreateContainerResponse {
 
 message Container {
     enum ContainerStatus{
-        Running = 0;
-        Paused = 1;
-        Restarting = 2;
-        OOMKilled = 3;
-        Dead = 4;
-        UNKNOWN = 5; 
+        Created = 0;
+        Restarting = 1;
+        Running = 2;
+        Removing = 3;
+        Paused = 4;
+        Exited = 5;
+        Dead = 6;
+        Unknown = 7; 
    }
     string id = 1;
     int64 created = 2;
