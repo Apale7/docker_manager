@@ -2,6 +2,7 @@ syntax = "proto3";
 package docker_manager;
 
 import "proto/base/base.proto";
+
 import "google/protobuf/empty.proto";
 service DockerManager {
     rpc CreateContainer(CreateContainerRequest) returns (CreateContainerResponse) {}
@@ -69,9 +70,15 @@ message DeleteContainerResponse {
 }
 
 message CreateImageRequest {
-    uint32 user_id = 1;
-    bytes dockerfile = 2;
-    
+    uint32 type = 1; //以何种方式创建镜像 0-dockerfile 1-从镜像仓库pull
+    uint32 user_id = 2;
+
+    bytes dockerfile = 3;
+
+    string repository_url = 4;
+    string username = 5;
+    string password = 6;
+
     base.Base base = 255;
 }
 

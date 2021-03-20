@@ -7,6 +7,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -38,7 +39,7 @@ type ManagerClient interface {
 	BuildImage(ctx context.Context, in *BuildImage_Request, opts ...grpc.CallOption) (*BuildImage_Response, error)
 	LoadImage(ctx context.Context, opts ...grpc.CallOption) (Manager_LoadImageClient, error)
 	GetImage(ctx context.Context, in *GetImage_Request, opts ...grpc.CallOption) (*GetImage_Response, error)
-	RemoveImage(ctx context.Context, in *RemoveImage_Request, opts ...grpc.CallOption) (*RemoveImage_Response, error)
+	RemoveImage(ctx context.Context, in *RemoveImage_Request, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type managerClient struct {
@@ -250,8 +251,8 @@ func (c *managerClient) GetImage(ctx context.Context, in *GetImage_Request, opts
 	return out, nil
 }
 
-func (c *managerClient) RemoveImage(ctx context.Context, in *RemoveImage_Request, opts ...grpc.CallOption) (*RemoveImage_Response, error) {
-	out := new(RemoveImage_Response)
+func (c *managerClient) RemoveImage(ctx context.Context, in *RemoveImage_Request, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, "/Manager/RemoveImage", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -283,7 +284,7 @@ type ManagerServer interface {
 	BuildImage(context.Context, *BuildImage_Request) (*BuildImage_Response, error)
 	LoadImage(Manager_LoadImageServer) error
 	GetImage(context.Context, *GetImage_Request) (*GetImage_Response, error)
-	RemoveImage(context.Context, *RemoveImage_Request) (*RemoveImage_Response, error)
+	RemoveImage(context.Context, *RemoveImage_Request) (*emptypb.Empty, error)
 	mustEmbedUnimplementedManagerServer()
 }
 
@@ -342,7 +343,7 @@ func (UnimplementedManagerServer) LoadImage(Manager_LoadImageServer) error {
 func (UnimplementedManagerServer) GetImage(context.Context, *GetImage_Request) (*GetImage_Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetImage not implemented")
 }
-func (UnimplementedManagerServer) RemoveImage(context.Context, *RemoveImage_Request) (*RemoveImage_Response, error) {
+func (UnimplementedManagerServer) RemoveImage(context.Context, *RemoveImage_Request) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveImage not implemented")
 }
 func (UnimplementedManagerServer) mustEmbedUnimplementedManagerServer() {}

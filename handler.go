@@ -36,7 +36,7 @@ func (DockerManagerServer) GetContainer(ctx context.Context, req *docker_manager
 // PruneContainers delete all unused containers
 func (DockerManagerServer) PruneContainers(ctx context.Context, req *emptypb.Empty) (*emptypb.Empty, error) {
 	fmt.Println("PruneContainers called.")
-	return nil, rpc.PruneContainers(ctx)
+	return &emptypb.Empty{}, rpc.PruneContainers(ctx)
 }
 
 // CreateImage create a image for a user

@@ -1,5 +1,5 @@
 syntax = "proto3";
-
+import "google/protobuf/empty.proto";
 message FileStat{
      enum FileType{
           FILE = 0;
@@ -148,7 +148,14 @@ message PullImage_Request{
      string tag = 2; //tag为空时，默认为latest
      AuthConfig auth_config = 3;
 }
-message PullImage_Response{}
+message PullImage_Response{
+     enum ExitCode{
+          SUCCESS = 0;
+          ERROR = 1;
+     }
+     ExitCode exit_code = 1;
+     ImageAttr image_attr = 2;
+}
 
 message BuildImage_Request{
      bytes dockerfile = 1;
@@ -217,7 +224,7 @@ service Manager{
      rpc BuildImage(BuildImage_Request) returns (BuildImage_Response){}
      rpc LoadImage(stream LoadImage_Request) returns (LoadImage_Response){}
      rpc GetImage(GetImage_Request) returns (GetImage_Response){}
-     rpc RemoveImage(RemoveImage_Request) returns (RemoveImage_Response){}
+     rpc RemoveImage(RemoveImage_Request) returns (google.protobuf.Empty){}
 
 //BackupUtils
 }
