@@ -29,8 +29,9 @@ func GetImage(ctx context.Context, userIDs []uint32, imageIDs []string) (images 
 }
 
 func CreateImage(ctx context.Context, userID uint32, image *model.Image) (err error) {
-	err = db.WithContext(ctx).Transaction(func(tx *gorm.DB) (err error) {
-		err = tx.Create(image).Error
+	db := db.WithContext(ctx)
+	err = db.Transaction(func(tx *gorm.DB) (err error) {
+		err = tx.FirstOrCreate(image, *image).Error
 		if err != nil {
 			logrus.Warnf("[CreateImage] create image error, err: %v", err)
 			return
@@ -51,7 +52,8 @@ func DeleteImage(ctx context.Context, userID uint32, imageID string) (err error)
 		UserID:  userID,
 		ImageID: imageID,
 	}
-	db := db.Unscoped().WithContext(ctx).Where("user_id = ? AND image_id = ?", userID, imageID).Delete(&userImage)
+	db := db.WithContext(ctx)
+	db = db.Unscoped().WithContext(ctx).Where("user_id = ? AND image_id = ?", userID, imageID).Delete(&userImage)
 	if db.Error != nil {
 		return
 	}

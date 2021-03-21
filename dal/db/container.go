@@ -10,7 +10,8 @@ import (
 )
 
 func CreateContainer(ctx context.Context, userID uint32, container *model.Container) (err error) {
-	err = db.WithContext(ctx).Transaction(func(tx *gorm.DB) (err error) {
+	db := db.WithContext(ctx)
+	err = db.Transaction(func(tx *gorm.DB) (err error) {
 		err = tx.Model(&model.Container{}).Create(&container).Error
 		if err != nil {
 			logrus.Warnf("[CreateContainer] create container error, err: %v", err)
@@ -41,8 +42,8 @@ func DeleteContainer(ctx context.Context, userID uint32, containerID string) (er
 		UserID:      userID,
 		ContainerID: containerID,
 	}
-
-	db := db.Unscoped().Model(&model.UserContainer{}).Where("user_id = ? AND container_id = ?", userID, containerID).Delete(&userContainer)
+	db := db.WithContext(ctx)
+	db = db.Unscoped().Model(&model.UserContainer{}).Where("user_id = ? AND container_id = ?", userID, containerID).Delete(&userContainer)
 	if db.Error != nil {
 		logrus.Warnf("DeleteContainer error: %v", err)
 		return

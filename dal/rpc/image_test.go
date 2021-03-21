@@ -2,6 +2,7 @@ package rpc
 
 import (
 	"context"
+	Manage "docker_manager/proto/container_server"
 	"fmt"
 	"testing"
 )
@@ -19,8 +20,23 @@ func TestGetImages(t *testing.T) {
 		// 	logrus.Errorln(err)
 		// 	t.FailNow()
 		// }
-		if i.Id == "sha256:852698725025535f9185f477e385577db6478d022593d662707b332bb0553d56" {
-			fmt.Println(i.Id + " exist.")
-		}
+		fmt.Printf("%+v\n", i)
+	}
+}
+
+func TestCreateImage(t *testing.T) {
+	imageAttr, err := PullImage(ctx, "ubuntu", "14.04", &Manage.AuthConfig{Username: "123", Password: "456"})
+	if err != nil {
+		fmt.Println(err)
+		t.FailNow()
+	}
+	fmt.Printf("%+v", imageAttr)
+}
+
+func TestDeleteImage(t *testing.T) {
+	err := DeleteImage(ctx, "sha256:df043b4f0cf196749a9a426080f433b76cabf6b37dde2edefef317ba54c713c7", true)
+	if err != nil {
+		fmt.Println(err)
+		t.FailNow()
 	}
 }

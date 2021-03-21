@@ -69,15 +69,24 @@ message DeleteContainerResponse {
     base.BaseResp base_resp = 255;
 }
 
+enum CreateImageType {
+    DOCKERFILE = 0;
+    PULL_FROM_REPOSITORY = 1;
+    UPLOAD = 2;
+}
+
 message CreateImageRequest {
-    uint32 type = 1; //以何种方式创建镜像 0-dockerfile 1-从镜像仓库pull
+    CreateImageType type = 1; //以何种方式创建镜像 0-dockerfile 1-从镜像仓库pull 2-直接上传镜像
     uint32 user_id = 2;
 
-    bytes dockerfile = 3;
+    bytes dockerfile = 3;//0-dockerfile
 
-    string repository_url = 4;
-    string username = 5;
-    string password = 6;
+    string repository_url = 4;//1-从镜像仓库pull
+    string username = 5;//1-从镜像仓库pull
+    string password = 6;//1-从镜像仓库pull
+    string tag = 7;//1-从镜像仓库pull
+
+    string image_url = 8;//2-前端直接上传镜像到文件服务器
 
     base.Base base = 255;
 }

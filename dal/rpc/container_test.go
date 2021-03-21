@@ -14,11 +14,14 @@ func TestGetContainers(t *testing.T) {
 		t.FailNow()
 	}
 	for _, v := range resp {
+		if v.Image == "sha256:9bde71f867947cd2781069c8c63a6fbaa89dde42b963321ded0a745348fb67bc" {
+			fmt.Println(1)
+		}
 		// err := db.CreateContainer(ctx, 2, dto.RPCContainerToModelContainer(v))
 		// if err != nil {
 		// 	logrus.Errorln("name too long: " + v.Name)
 		// }
-		fmt.Printf("%+v %s\n", v.Id, v.Status.String())
+		// fmt.Printf("%+v %s\n", v.Id, v.Status.String())
 	}
 }
 

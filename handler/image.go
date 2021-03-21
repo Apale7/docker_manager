@@ -5,32 +5,60 @@ import (
 	"docker_manager/dal/db"
 	"docker_manager/dal/rpc"
 	"docker_manager/dto"
+	Manage "docker_manager/proto/container_server"
 	"docker_manager/proto/docker_manager"
 
 	"github.com/pkg/errors"
 )
 
 func CreateImage(ctx context.Context, req *docker_manager.CreateImageRequest) (resp *docker_manager.CreateImageResponse, err error) {
-	imageAttr, err := rpc.BuildImage(ctx, req.Dockerfile)
-	if err != nil {
-		return
+	resp = &docker_manager.CreateImageResponse{}
+
+	switch req.Type {
+	case docker_manager.CreateImageType_DOCKERFILE:
+		imageAttr, err := rpc.BuildImage(ctx, req.Dockerfile)
+		if err != nil {
+			return resp, errors.WithStack(err)
+		}
+
+		err = db.CreateImage(ctx, req.UserId, dto.RPCImageToModelImage(imageAttr))
+		if err != nil {
+			return resp, errors.WithStack(err)
+		}
+	case docker_manager.CreateImageType_PULL_FROM_REPOSITORY:
+		imageAttr, err := rpc.PullImage(ctx, req.RepositoryUrl, req.Tag, &Manage.AuthConfig{Username: req.Username, Password: req.Password})
+		if err != nil {
+			return resp, errors.WithStack(err)
+		}
+
+		err = db.CreateImage(ctx, req.UserId, dto.RPCImageToModelImage(imageAttr))
+		if err != nil {
+			return resp, errors.WithStack(err)
+		}
+	case docker_manager.CreateImageType_UPLOAD:
+		imageAttrs, err := rpc.UploadImage(ctx, req.ImageUrl)
+		if err != nil {
+			return resp, errors.WithStack(err)
+		}
+		for _, i := range imageAttrs {
+			err = db.CreateImage(ctx, req.UserId, dto.RPCImageToModelImage(i))
+			if err != nil {
+				return resp, errors.WithStack(err)
+			}
+		}
 	}
 
-	err = db.CreateImage(ctx, req.UserId, dto.RPCImageToModelImage(imageAttr))
-	if err != nil {
-		return
-	}
-	resp = &docker_manager.CreateImageResponse{}
 	return
 }
 
 func DeleteImage(ctx context.Context, req *docker_manager.DeleteImageRequest) (resp *docker_manager.DeleteImageResponse, err error) {
-	err = rpc.DeleteImage(ctx, req.ImageId, req.Force)
+	err = rpc.DeleteImage(ctx, req.ImageId, req.Force) //多人上传一样的镜像会复用；复用同一个镜像会导致一人删除，所有人不可用 //todo fix
 	if err != nil {
 		return
 	}
 
 	err = db.DeleteImage(ctx, req.UserId, req.ImageId)
+	resp = &docker_manager.DeleteImageResponse{}
 	return
 }
 
