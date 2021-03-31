@@ -47,15 +47,31 @@ func (DockerManagerServer) CreateImage(ctx context.Context, req *docker_manager.
 
 // DeleteImage delete a image for a user
 func (DockerManagerServer) DeleteImage(ctx context.Context, req *docker_manager.DeleteImageRequest) (resp *docker_manager.DeleteImageResponse, err error) {
+	fmt.Println("DeleteImage called.")
 	return handler.DeleteImage(ctx, req)
 }
 
 // GetImage get images by image_id or user_id
 func (DockerManagerServer) GetImage(ctx context.Context, req *docker_manager.GetImageRequest) (resp *docker_manager.GetImageResponse, err error) {
+	fmt.Println("GetImage called.")
 	return handler.GetImage(ctx, req)
 }
 
 // PruneImages delete all unused images
 func (DockerManagerServer) PruneImages(ctx context.Context, req *emptypb.Empty) (*emptypb.Empty, error) {
+	fmt.Println("PruneImages called.")
 	return nil, rpc.PruneImages(ctx)
+}
+
+func (DockerManagerServer) StartContainer(ctx context.Context, req *docker_manager.StartContainerRequest) (*emptypb.Empty, error) {
+	fmt.Println("StartContainer called.")
+	return handler.StartContainer(ctx, req)
+}
+func (DockerManagerServer) StopContainer(ctx context.Context, req *docker_manager.StopContainerRequest) (*emptypb.Empty, error) {
+	fmt.Println("StopContainer called.")
+	return handler.StopContainer(ctx, req)
+}
+func (DockerManagerServer) RestartContainer(ctx context.Context, req *docker_manager.RestartContainerRequest) (*emptypb.Empty, error) {
+	fmt.Println("RestartContainer called.")
+	return handler.RestartContainer(ctx, req)
 }

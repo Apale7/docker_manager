@@ -8,7 +8,10 @@ import (
 	"docker_manager/proto/base"
 	"docker_manager/proto/docker_manager"
 
+	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
+	"google.golang.org/protobuf/types/known/emptypb"
+	"gorm.io/gorm"
 )
 
 // CreateContainer 先创建container，再记录user与container的关系
@@ -60,6 +63,52 @@ func GetContainer(ctx context.Context, req *docker_manager.GetContainerRequest) 
 	resp.Containers = make([]*docker_manager.Container, 0, len(containers))
 	for _, c := range containers {
 		resp.Containers = append(resp.Containers, dto.ModelContainerToDockerManagerContainer(c))
+	}
+	return
+}
+
+func StartContainer(ctx context.Context, req *docker_manager.StartContainerRequest) (resp *emptypb.Empty, err error) {
+	resp = &emptypb.Empty{}
+	_, err = db.GetUserContainer(ctx, req.UserId, req.ContainerId)
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return resp, errors.WithStack(errors.New("无权限启动该容器"))
+	}
+	if err != nil {
+		return resp, errors.WithStack(errors.New("服务器错误"))
+	}
+	err = rpc.StartContainer(ctx, req.ContainerId)
+	if err != nil {
+		return resp, errors.WithStack(errors.New("启动容器失败"))
+	}
+	return
+}
+func StopContainer(ctx context.Context, req *docker_manager.StopContainerRequest) (resp *emptypb.Empty, err error) {
+	resp = &emptypb.Empty{}
+	_, err = db.GetUserContainer(ctx, req.UserId, req.ContainerId)
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return resp, errors.WithStack(errors.New("无权限关闭该容器"))
+	}
+	if err != nil {
+		return resp, errors.WithStack(errors.New("服务器错误"))
+	}
+	err = rpc.StopContainer(ctx, req.ContainerId)
+	if err != nil {
+		return resp, errors.WithStack(errors.New("关闭容器失败"))
+	}
+	return
+}
+func RestartContainer(ctx context.Context, req *docker_manager.RestartContainerRequest) (resp *emptypb.Empty, err error) {
+	resp = &emptypb.Empty{}
+	_, err = db.GetUserContainer(ctx, req.UserId, req.ContainerId)
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return resp, errors.WithStack(errors.New("无权限重启该容器"))
+	}
+	if err != nil {
+		return resp, errors.WithStack(errors.New("服务器错误"))
+	}
+	err = rpc.RestartContainer(ctx, req.ContainerId)
+	if err != nil {
+		return resp, errors.WithStack(errors.New("重启容器失败"))
 	}
 	return
 }

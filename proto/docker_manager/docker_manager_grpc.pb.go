@@ -27,6 +27,9 @@ type DockerManagerClient interface {
 	DeleteImage(ctx context.Context, in *DeleteImageRequest, opts ...grpc.CallOption) (*DeleteImageResponse, error)
 	GetImage(ctx context.Context, in *GetImageRequest, opts ...grpc.CallOption) (*GetImageResponse, error)
 	PruneImages(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	StartContainer(ctx context.Context, in *StartContainerRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	StopContainer(ctx context.Context, in *StopContainerRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	RestartContainer(ctx context.Context, in *RestartContainerRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type dockerManagerClient struct {
@@ -109,6 +112,33 @@ func (c *dockerManagerClient) PruneImages(ctx context.Context, in *emptypb.Empty
 	return out, nil
 }
 
+func (c *dockerManagerClient) StartContainer(ctx context.Context, in *StartContainerRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/docker_manager.DockerManager/StartContainer", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dockerManagerClient) StopContainer(ctx context.Context, in *StopContainerRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/docker_manager.DockerManager/StopContainer", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dockerManagerClient) RestartContainer(ctx context.Context, in *RestartContainerRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/docker_manager.DockerManager/RestartContainer", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // DockerManagerServer is the server API for DockerManager service.
 // All implementations must embed UnimplementedDockerManagerServer
 // for forward compatibility
@@ -121,6 +151,9 @@ type DockerManagerServer interface {
 	DeleteImage(context.Context, *DeleteImageRequest) (*DeleteImageResponse, error)
 	GetImage(context.Context, *GetImageRequest) (*GetImageResponse, error)
 	PruneImages(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	StartContainer(context.Context, *StartContainerRequest) (*emptypb.Empty, error)
+	StopContainer(context.Context, *StopContainerRequest) (*emptypb.Empty, error)
+	RestartContainer(context.Context, *RestartContainerRequest) (*emptypb.Empty, error)
 }
 
 // UnimplementedDockerManagerServer must be embedded to have forward compatible implementations.
@@ -150,6 +183,15 @@ func (UnimplementedDockerManagerServer) GetImage(context.Context, *GetImageReque
 }
 func (UnimplementedDockerManagerServer) PruneImages(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PruneImages not implemented")
+}
+func (UnimplementedDockerManagerServer) StartContainer(context.Context, *StartContainerRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method StartContainer not implemented")
+}
+func (UnimplementedDockerManagerServer) StopContainer(context.Context, *StopContainerRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method StopContainer not implemented")
+}
+func (UnimplementedDockerManagerServer) RestartContainer(context.Context, *RestartContainerRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RestartContainer not implemented")
 }
 func (UnimplementedDockerManagerServer) mustEmbedUnimplementedDockerManagerServer() {}
 
@@ -308,6 +350,60 @@ func _DockerManager_PruneImages_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _DockerManager_StartContainer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(StartContainerRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DockerManagerServer).StartContainer(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/docker_manager.DockerManager/StartContainer",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DockerManagerServer).StartContainer(ctx, req.(*StartContainerRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _DockerManager_StopContainer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(StopContainerRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DockerManagerServer).StopContainer(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/docker_manager.DockerManager/StopContainer",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DockerManagerServer).StopContainer(ctx, req.(*StopContainerRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _DockerManager_RestartContainer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RestartContainerRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DockerManagerServer).RestartContainer(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/docker_manager.DockerManager/RestartContainer",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DockerManagerServer).RestartContainer(ctx, req.(*RestartContainerRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // DockerManager_ServiceDesc is the grpc.ServiceDesc for DockerManager service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -346,6 +442,18 @@ var DockerManager_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PruneImages",
 			Handler:    _DockerManager_PruneImages_Handler,
+		},
+		{
+			MethodName: "StartContainer",
+			Handler:    _DockerManager_StartContainer_Handler,
+		},
+		{
+			MethodName: "StopContainer",
+			Handler:    _DockerManager_StopContainer_Handler,
+		},
+		{
+			MethodName: "RestartContainer",
+			Handler:    _DockerManager_RestartContainer_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

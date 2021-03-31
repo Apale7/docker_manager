@@ -13,6 +13,9 @@ service DockerManager {
     rpc DeleteImage(DeleteImageRequest) returns (DeleteImageResponse) {}
     rpc GetImage(GetImageRequest) returns (GetImageResponse) {}
     rpc PruneImages(google.protobuf.Empty) returns (google.protobuf.Empty) {}
+    rpc StartContainer(StartContainerRequest) returns (google.protobuf.Empty) {}
+    rpc StopContainer(StopContainerRequest) returns (google.protobuf.Empty) {}
+    rpc RestartContainer(RestartContainerRequest) returns (google.protobuf.Empty) {}
 }
 
 message CreateContainerRequest {
@@ -125,4 +128,25 @@ message DeleteImageRequest {
 
 message DeleteImageResponse {
     base.BaseResp base_resp = 255;
+}
+
+message StartContainerRequest {
+    uint32 user_id = 1;
+    string container_id = 2;
+
+    base.Base base = 255;
+}
+
+message StopContainerRequest {
+    uint32 user_id = 1;
+    string container_id = 2;
+
+    base.Base base = 255;
+}
+
+message RestartContainerRequest {
+    uint32 user_id = 1;
+    string container_id = 2;
+
+    base.Base base = 255;
 }
