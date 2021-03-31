@@ -71,7 +71,7 @@ func GetContainer(ctx context.Context, userID uint32, containerID string) (conta
 	return
 }
 
-func GetUserContainer(ctx context.Context, userID uint32, containerID string) (userContainer *model.UserContainer, err error){
+func GetUserContainer(ctx context.Context, userID uint32, containerID string) (userContainer *model.UserContainer, err error) {
 	db := db.WithContext(ctx)
 	userContainer = &model.UserContainer{}
 	err = db.Model(&model.UserContainer{}).Select("id").Where("user_id=? AND container_id=?", userID, containerID).Take(userContainer).Error
