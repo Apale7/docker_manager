@@ -38,7 +38,7 @@ func DeleteUnusedContainer(ctx context.Context) (err error) {
 }
 
 func StartContainer(ctx context.Context, containerID string) (err error) {
-	_, err = containerManagerClient.StartContainer(ctx, &containerManager.StartContainer_Request{})
+	_, err = containerManagerClient.StartContainer(ctx, &containerManager.StartContainer_Request{ContainerId: containerID})
 
 	return
 }

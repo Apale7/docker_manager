@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"docker_manager/dal/db"
+	"docker_manager/dal/db/model"
 	"docker_manager/dal/rpc"
 	"docker_manager/dto"
 	"docker_manager/proto/base"
@@ -80,6 +81,7 @@ func StartContainer(ctx context.Context, req *docker_manager.StartContainerReque
 	if err != nil {
 		return resp, errors.WithStack(errors.New("启动容器失败"))
 	}
+	err = db.UpdateContainer(ctx, &model.Container{ContainerID: req.ContainerId, Status: int8(docker_manager.Container_Running)})
 	return
 }
 func StopContainer(ctx context.Context, req *docker_manager.StopContainerRequest) (resp *emptypb.Empty, err error) {
@@ -95,10 +97,15 @@ func StopContainer(ctx context.Context, req *docker_manager.StopContainerRequest
 	if err != nil {
 		return resp, errors.WithStack(errors.New("关闭容器失败"))
 	}
+	err = db.UpdateContainer(ctx, &model.Container{ContainerID: req.ContainerId, Status: int8(docker_manager.Container_Paused)})
 	return
 }
 func RestartContainer(ctx context.Context, req *docker_manager.RestartContainerRequest) (resp *emptypb.Empty, err error) {
 	resp = &emptypb.Empty{}
+	err = db.UpdateContainer(ctx, &model.Container{ContainerID: req.ContainerId, Status: int8(docker_manager.Container_Restarting)})
+	if err != nil {
+		return resp, errors.WithStack(errors.New("服务器错误"))
+	}
 	_, err = db.GetUserContainer(ctx, req.UserId, req.ContainerId)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return resp, errors.WithStack(errors.New("无权限重启该容器"))
@@ -109,6 +116,10 @@ func RestartContainer(ctx context.Context, req *docker_manager.RestartContainerR
 	err = rpc.RestartContainer(ctx, req.ContainerId)
 	if err != nil {
 		return resp, errors.WithStack(errors.New("重启容器失败"))
+	}
+	err = db.UpdateContainer(ctx, &model.Container{ContainerID: req.ContainerId, Status: int8(docker_manager.Container_Running)})
+	if err != nil {
+		return resp, errors.WithStack(errors.New("服务器错误"))
 	}
 	return
 }

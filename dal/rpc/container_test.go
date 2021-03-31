@@ -13,15 +13,8 @@ func TestGetContainers(t *testing.T) {
 	if err != nil {
 		t.FailNow()
 	}
-	for _, v := range resp {
-		if v.Image == "sha256:9bde71f867947cd2781069c8c63a6fbaa89dde42b963321ded0a745348fb67bc" {
-			fmt.Println(1)
-		}
-		// err := db.CreateContainer(ctx, 2, dto.RPCContainerToModelContainer(v))
-		// if err != nil {
-		// 	logrus.Errorln("name too long: " + v.Name)
-		// }
-		// fmt.Printf("%+v %s\n", v.Id, v.Status.String())
+	for _, i := range resp {
+		fmt.Println(i.Name, i.Status.String())
 	}
 }
 
@@ -62,5 +55,14 @@ func TestStopContainers(t *testing.T) {
 	err = StartContainer(ctx, c[1].Id)
 	if err != nil {
 		t.Logf("StartContainer error, err: %+v", err)
+	}
+
+}
+
+func TestStartContainer(t *testing.T) {
+	err := StartContainer(ctx, "fd5354ec483f56565746aec4c642bc418115c162f2c1bc18751004a93a7a5686")
+	if err != nil {
+		fmt.Println(err)
+		t.FailNow()
 	}
 }

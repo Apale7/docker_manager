@@ -77,3 +77,12 @@ func GetUserContainer(ctx context.Context, userID uint32, containerID string) (u
 	err = db.Model(&model.UserContainer{}).Select("id").Where("user_id=? AND container_id=?", userID, containerID).Take(userContainer).Error
 	return
 }
+
+func UpdateContainer(ctx context.Context, container *model.Container) (err error) {
+	if container == nil || len(container.ContainerID) <= 0 {
+		return errors.New("update nothing")
+	}
+	db := db.WithContext(ctx)
+	err = db.Model(&model.Container{}).Where("container_id = ?", container.ContainerID).Updates(container).Error
+	return err
+}

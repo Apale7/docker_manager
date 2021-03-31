@@ -15,7 +15,7 @@ var (
 func init() {
 	containerManagerClient = containerManager.NewManagerClient(getConn("193.112.177.167:8666"))
 	// userCenterClient = user_center.NewUserCenterClient(getConn("111.230.172.240:9999"))
-	userCenterClient = user_center.NewUserCenterClient(getConn("localhost:9999"))
+	userCenterClient = user_center.NewUserCenterClient(getConn("111.230.172.240:9999"))
 }
 
 func getConn(addr string) *grpc.ClientConn {
