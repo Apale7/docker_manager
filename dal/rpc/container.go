@@ -50,7 +50,7 @@ func StopContainer(ctx context.Context, containerID string) (err error) {
 }
 
 func RestartContainer(ctx context.Context, containerID string) (err error) {
-	_, err = containerManagerClient.RestartContainer(ctx, &containerManager.RestartContainer_Request{})
+	_, err = containerManagerClient.RestartContainer(ctx, &containerManager.RestartContainer_Request{ContainerId: containerID})
 
 	return
 }
