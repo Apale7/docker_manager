@@ -37,6 +37,7 @@ func DeleteUnusedContainer(ctx context.Context) (err error) {
 	return
 }
 
+//todo start前get一下，如果已经打开则不start
 func StartContainer(ctx context.Context, containerID string) (err error) {
 	_, err = containerManagerClient.StartContainer(ctx, &containerManager.StartContainer_Request{ContainerId: containerID})
 
