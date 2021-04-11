@@ -20,13 +20,14 @@ func CreateImage(ctx context.Context, req *docker_manager.CreateImageRequest) (r
 		if err != nil {
 			return resp, errors.WithStack(err)
 		}
-
+		imageAttr.Author = req.Username
 		err = db.CreateImage(ctx, req.UserId, dto.RPCImageToModelImage(imageAttr))
 		if err != nil {
 			return resp, errors.WithStack(err)
 		}
 	case docker_manager.CreateImageType_PULL_FROM_REPOSITORY:
 		imageAttr, err := rpc.PullImage(ctx, req.RepositoryUrl, req.Tag, &Manage.AuthConfig{Username: req.Username, Password: req.Password})
+		imageAttr.Author = req.Username
 		if err != nil {
 			return resp, errors.WithStack(err)
 		}
@@ -41,6 +42,7 @@ func CreateImage(ctx context.Context, req *docker_manager.CreateImageRequest) (r
 			return resp, errors.WithStack(err)
 		}
 		for _, i := range imageAttrs {
+			i.Author = req.Username
 			err = db.CreateImage(ctx, req.UserId, dto.RPCImageToModelImage(i))
 			if err != nil {
 				return resp, errors.WithStack(err)
