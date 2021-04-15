@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"net"
+	"os"
 
 	h "docker_manager/proto/docker_manager"
 
@@ -10,11 +11,8 @@ import (
 	"google.golang.org/grpc"
 )
 
-const (
-	addr = ":8888"
-)
-
 var (
+	addr   = ":8888"
 	conn   *grpc.ClientConn
 	ctx    context.Context
 	cancel context.CancelFunc
@@ -34,4 +32,11 @@ func main() {
 	h.RegisterDockerManagerServer(server, &DockerManagerServer{})
 	logrus.Infof("server listen at %s", lis.Addr().String())
 	server.Serve(lis)
+}
+
+func init() {
+	tmpAddr := os.Getenv("docker_manager_addr")
+	if tmpAddr != "" {
+		addr = tmpAddr
+	}
 }
