@@ -2,7 +2,10 @@ package rpc
 
 import (
 	containerManager "docker_manager/proto/container_server"
-	"docker_manager/proto/user-center"
+	user_center "docker_manager/proto/user-center"
+	"fmt"
+	"os"
+
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 )
@@ -12,10 +15,15 @@ var (
 	userCenterClient       user_center.UserCenterClient
 )
 
+var (
+	containerManagerAddr string = "[::]:8666"
+	userCenterAddr       string = ":9999"
+)
+
 func init() {
-	containerManagerClient = containerManager.NewManagerClient(getConn("193.112.177.167:8666"))
+	containerManagerClient = containerManager.NewManagerClient(getConn(containerManagerAddr))
 	// userCenterClient = user_center.NewUserCenterClient(getConn("111.230.172.240:9999"))
-	userCenterClient = user_center.NewUserCenterClient(getConn("111.230.172.240:9999"))
+	userCenterClient = user_center.NewUserCenterClient(getConn(userCenterAddr))
 }
 
 func getConn(addr string) *grpc.ClientConn {
@@ -26,4 +34,13 @@ func getConn(addr string) *grpc.ClientConn {
 		logrus.Fatalf("%+v", err)
 	}
 	return conn
+}
+
+func initAddrs() {
+	userCenterAddr = os.Getenv("user_center_addr")
+	if userCenterAddr == "" {
+		userCenterAddr = ":9999"
+	}
+
+	fmt.Println(userCenterAddr)
 }
